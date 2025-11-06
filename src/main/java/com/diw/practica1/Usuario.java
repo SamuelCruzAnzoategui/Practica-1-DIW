@@ -2,20 +2,26 @@ package com.diw.practica1;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Usuario")
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String nombre;
     private String pass;
-    private String rol;
+
+    public enum Rol {ADMIN, PROFESOR, ALUMNO}
+    @Enumerated (EnumType.STRING)
+    private Rol rol;
+
     @OneToMany
-    private List<Libro> libros;
+    private List<Libro> libros = new ArrayList<>();
 
     public Usuario() {
     }
@@ -44,11 +50,11 @@ public class Usuario {
         this.pass = pass;
     }
 
-    public String getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
     }
 
