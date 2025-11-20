@@ -1,4 +1,4 @@
-package com.diw.practica1;
+package com.diw.practica1.services;
 
 public interface UsuarioService {
 }
