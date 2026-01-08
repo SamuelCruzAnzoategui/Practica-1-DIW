@@ -1,3 +1,4 @@
+
 package com.diw.practica1.services;
 
 import com.diw.practica1.model.Libro;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -17,7 +19,7 @@ import java.util.Optional;
  * <p>Esta clase delega la persistencia en las instancias de
  * {@link UsuarioRepository} y {@link LibroRepository} inyectadas por Spring.</p>
  *
- *
+ * @author
  * @since 1.0
  */
 @Service
@@ -42,8 +44,8 @@ public class AdminServiceImpl implements AdminService {
      */
     @Autowired
     public AdminServiceImpl(UsuarioRepository usuarioRepository, LibroRepository libroRepository) {
-        this.usuarioRepository = usuarioRepository;
-        this.libroRepository = libroRepository;
+        this.usuarioRepository = Objects.requireNonNull(usuarioRepository, "El repositorio de usuarios es obligatorio");
+        this.libroRepository = Objects.requireNonNull(libroRepository, "El repositorio de libros es obligatorio");
     }
 
     /**
@@ -58,6 +60,13 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public Usuario registrarUsuario(Usuario usuario) {
+        Objects.requireNonNull(usuario, "El usuario no puede ser nulo");
+
+        // Al crear un usuario vía POST se puede enviar un id=0 desde el cliente.
+        // Forzamos el identificador a null para evitar que Hibernate intente hacer
+        // un merge sobre una fila inexistente y provoque un StaleObjectStateException.
+        usuario.setId(null);
+
         return usuarioRepository.save(usuario);
     }
 
@@ -82,6 +91,13 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public Libro registrarLibro(Libro libro) {
+        Objects.requireNonNull(libro, "El libro no puede ser nulo");
+
+        // Al crear un usuario vía POST se puede enviar un id=0 desde el cliente.
+        // Forzamos el identificador a null para evitar que Hibernate intente hacer
+        // un merge sobre una fila inexistente y provoque un StaleObjectStateException.
+        libro.setId(null);
+
         if (libro.getEstadoLibro() == null) {
             libro.setEstadoLibro(Libro.Estado.DISPONIBLE);
         }
@@ -102,6 +118,9 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public Optional<Libro> actualizarLibro(Integer libroId, Libro libroActualizado) {
+        Objects.requireNonNull(libroId, "El identificador del libro no puede ser nulo");
+        Objects.requireNonNull(libroActualizado, "El libro actualizado no puede ser nulo");
+
         return libroRepository.findById(libroId).map(libroExistente -> {
             libroExistente.setTitulo(libroActualizado.getTitulo());
             libroExistente.setAutor(libroActualizado.getAutor());
@@ -126,6 +145,7 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public boolean eliminarLibro(Integer libroId) {
+        Objects.requireNonNull(libroId, "El identificador del libro no puede ser nulo");
         return libroRepository.findById(libroId).map(libro -> {
             libroRepository.delete(libro);
             return true;

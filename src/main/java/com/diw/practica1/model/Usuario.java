@@ -1,4 +1,6 @@
+
 package com.diw.practica1.model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -53,6 +55,7 @@ public class Usuario {
      * </p>
      */
     @OneToMany(mappedBy = "prestadoA", cascade = CascadeType.ALL)
+    @JsonManagedReference (value = "usuario-libros")
     private List<Libro> libros = new ArrayList<>();
 
     /**

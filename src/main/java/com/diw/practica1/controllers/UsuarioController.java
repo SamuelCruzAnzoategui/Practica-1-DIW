@@ -1,7 +1,10 @@
+
 package com.diw.practica1.controllers;
 
 import com.diw.practica1.services.UsuarioService;
 import com.diw.practica1.model.Libro;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,11 +43,11 @@ public class UsuarioController {
      *
      * @return lista de libros disponibles
      */
-    @GetMapping("/libros/disponibles")
+    @GetMapping(path = "/libros/disponibles", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Listar libros disponibles", description = "Devuelve la lista de libros que están disponibles para préstamo")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista de libros obtenida correctamente",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Libro.class))),
+                    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Libro.class)))),
             @ApiResponse(responseCode = "403", description = "Acceso denegado", content = @Content)
     })
     public List<Libro> librosDisponibles() {
@@ -57,11 +60,11 @@ public class UsuarioController {
      * @param usuarioId id del usuario
      * @return lista de libros prestados o 404 si no tiene préstamos
      */
-    @GetMapping("/{usuarioId}/prestamos")
+    @GetMapping(path = "/{usuarioId}/prestamos", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Listar préstamos de usuario", description = "Devuelve los libros prestados a un usuario dado")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Préstamos obtenidos correctamente",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Libro.class))),
+                    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Libro.class)))),
             @ApiResponse(responseCode = "404", description = "No se encontraron préstamos para el usuario", content = @Content),
             @ApiResponse(responseCode = "403", description = "Acceso denegado", content = @Content)
     })
@@ -81,7 +84,7 @@ public class UsuarioController {
      * @param libroId   id del libro a solicitar
      * @return libro solicitado con estado 201 o 400 si no es posible
      */
-    @PostMapping("/{usuarioId}/prestamos/{libroId}")
+    @PostMapping(path = "/{usuarioId}/prestamos/{libroId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Solicitar préstamo", description = "Solicita el préstamo de un libro para el usuario indicado")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Préstamo solicitado correctamente",
@@ -106,7 +109,7 @@ public class UsuarioController {
      * @param libroId   id del libro a devolver
      * @return libro devuelto o 400 si la devolución es inválida
      */
-    @PostMapping("/{usuarioId}/devoluciones/{libroId}")
+    @PostMapping(path = "/{usuarioId}/devoluciones/{libroId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Devolver préstamo", description = "Registra la devolución de un libro por parte del usuario")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Devolución procesada correctamente",

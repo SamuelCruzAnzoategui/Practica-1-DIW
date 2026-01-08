@@ -24,7 +24,7 @@ import java.util.Optional;
  *       excepciones en la implementación concreta.</li>
  * </ul>
  *
- *
+ * @author
  */
 public interface AdminService {
 
